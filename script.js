@@ -17,6 +17,7 @@ window.addEventListener('resize', () => {
 // Initial Setup
 function init() {
     setupIntro();
+    setupEnvelope();
 }
 
 // Scene 1: Cinematic Intro Animation
