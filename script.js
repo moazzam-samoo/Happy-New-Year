@@ -78,6 +78,35 @@ function setupIntro() {
 // Start
 init();
 
+// Scene 3: Horizontal Playlist Scroll
+function setupGallery() {
+
+    // We want the cards to move left as we scroll down
+    const container = document.querySelector(".cards-container");
+    const section = document.querySelector("#playlist-section");
+
+    // Calculate how far to move 
+    // (Container Width - Window Width + Left Padding)
+    // We use a functional value to handle resizes roughly, 
+    // but typically we'd recalculate on refresh.
+
+    // Simple robust calculation:
+    const getScrollAmount = () => -(container.scrollWidth - window.innerWidth + 100);
+
+    ScrollTrigger.create({
+        trigger: "#playlist-section",
+        start: "top top",
+        end: () => `+=${container.scrollWidth}`, // Scroll length proportional to width
+        pin: true,
+        scrub: 1,
+        // snap: 1 / (3 - 1), // Optional: Snap to cards
+        animation: gsap.to(container, {
+            x: getScrollAmount,
+            ease: "none"
+        })
+    });
+}
+
 // Scene 2: Interactive Envelope Reveal
 function setupEnvelope() {
 
