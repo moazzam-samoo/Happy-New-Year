@@ -326,6 +326,19 @@ h3,
     font-weight: bold;
 }
 
+.letter-card p {
+    color: var(--accent-pink);
+    font-weight: 500;
+    /* Added weight for readability */
+}
+
+.signature {
+    margin-top: 15px;
+    font-family: 'Parisienne', cursive;
+    font-size: 1.2rem;
+    color: var(--accent-pink);
+}
+
 /* Playlist Section (Horizontal Scroll) */
 #playlist-section {
     background: transparent;
