@@ -41,8 +41,8 @@ function init() {
 
     setupIntro();
     setupEnvelope();
-    setupGallery();
-    setupMemories(); // New Video Section
+    // Playlist Removed
+    setupMemories();
     setupFinale();
 }
 
