@@ -307,6 +307,7 @@ function setupEnvelope() {
 }
 
 // Scene 4: Cinematic Video Memories (Auto-Play Sequencer)
+// Scene 4: Cinematic Video Memories (Infinite Loop & Sound)
 function setupMemories() {
     console.log("Setting up Memories...");
     const cards = gsap.utils.toArray("#memories-section .memory-card");
@@ -320,22 +321,25 @@ function setupMemories() {
     let currentIndex = 0;
     let isAnimating = false;
 
-    // Transition Function
+    // Transition Function: Cinematic & Smooth
     function showCard(index) {
-        if (index >= cards.length) return; // End of sequence
+        // Loop safety (though logic handles it)
+        if (index >= cards.length) index = 0;
+
         isAnimating = true;
+        currentIndex = index;
 
         const card = cards[index];
         const video = videos[index];
 
-        // Animate In
+        // Animate In (Slower, Elegant Ease)
         gsap.to(card, {
             opacity: 1,
             visibility: "visible",
             scale: 1,
             y: 0,
-            duration: 1,
-            ease: "power2.out",
+            duration: 1.5, // Slower
+            ease: "expo.out", // Smooth cinematic feel
             onComplete: () => {
                 isAnimating = false;
                 playVideo(video, index);
@@ -350,8 +354,8 @@ function setupMemories() {
             opacity: 0,
             scale: 0.9,
             y: -50,
-            duration: 0.8,
-            ease: "power2.in",
+            duration: 1,
+            ease: "power2.inOut",
             onComplete: () => {
                 showCard(nextIndex); // Chain next card
             }
@@ -363,49 +367,50 @@ function setupMemories() {
         if (!video) return;
 
         video.currentTime = 0;
+        video.volume = 1.0; // Ensure max volume
         video.muted = false; // Try sound
 
         const playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(err => {
                 console.warn("Autoplay blocked, muting:", err);
+                // Fallback: Mute BUT keep trying to unmute if user interacts ?
                 video.muted = true;
                 video.play();
             });
         }
 
-        // AUTO CHANGE LOGIC: When video ends, go next
+        // INFINITE LOOP LOGIC: When video ends, go next (or back to start)
         video.onended = () => {
             console.log(`Video ${index} ended. Next...`);
             if (index < cards.length - 1) {
                 hideCard(index, index + 1);
             } else {
-                // Final video ended -> Scroll to Finale
-                console.log("All memories sequence complete. Scrolling to Finale...");
-
-                // Unpin or just scroll past
-                const finale = document.querySelector("#finale-section");
-                if (finale) {
-                    // Using Lenis if available or native
-                    window.scrollTo({
-                        top: finale.offsetTop,
-                        behavior: 'smooth'
-                    });
-
-                    // Also force GSAP to update if needed
-                    gsap.to(window, { scrollTo: finale, duration: 1.5, ease: "power2.inOut" });
-                }
+                // LAST VIDEO -> LOOP TO START (0)
+                console.log("Sequence complete. Looping back to start...");
+                hideCard(index, 0);
             }
         };
     }
+
+    // Click to Restart / Unmute Logic
+    cards.forEach((card, index) => {
+        card.style.cursor = "pointer";
+        card.addEventListener("click", () => {
+            const v = videos[index];
+            if (v) {
+                v.muted = false; // Ensure click unmutes
+                v.volume = 1.0;
+            }
+        });
+    });
 
     // ScrollTrigger Just to PIN and START the sequence
     ScrollTrigger.create({
         trigger: "#memories-section",
         start: "top top",
-        end: "+=4000", // Fixed pin duration to allow watching
+        end: "+=6000", // Increased pin duration for loops
         pin: true,
-        // scrub: true, // REMOVED SCRUB - Let time drive it
         onEnter: () => {
             if (currentIndex === 0 && !isAnimating) {
                 showCard(0);
