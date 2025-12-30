@@ -199,7 +199,16 @@ function setupEnvelope() {
     // Timeline to Open Envelope and Show Card 1
     const openTl = gsap.timeline({ paused: true });
     openTl.to(".envelope-flap", { rotateX: 180, duration: 1, ease: "power2.inOut" })
-        .to(".card-1", { y: -200, scale: 1.1, zIndex: 20, duration: 1, ease: "power3.out" }, "-=0.5");
+        .to(".card-1", {
+            y: -200,
+            scale: 1.1,
+            height: "auto", // Expand to full content height
+            maxHeight: "350px", // Allow growth
+            overflow: "auto", // Enable scroll
+            zIndex: 20,
+            duration: 1,
+            ease: "power3.out"
+        }, "-=0.5");
 
     let step = 0; // 0: Closed, 1: Open(Card1), 2: Card2, 3: Card3
 
@@ -215,13 +224,33 @@ function setupEnvelope() {
             // Step 1: Card 1 -> Show Card 2
             else if (step === 1) {
                 gsap.to(card1, { x: -300, rotation: -10, opacity: 0, duration: 0.8, ease: "power2.in" });
-                gsap.to(card2, { y: -200, scale: 1.1, zIndex: 21, duration: 1, delay: 0.2, ease: "power3.out" });
+                gsap.to(card2, {
+                    y: -200,
+                    scale: 1.1,
+                    height: "auto", /* Expand */
+                    maxHeight: "350px",
+                    overflow: "auto",
+                    zIndex: 21,
+                    duration: 1,
+                    delay: 0.2,
+                    ease: "power3.out"
+                });
                 step = 2;
             }
             // Step 2: Card 2 -> Show Card 3
             else if (step === 2) {
                 gsap.to(card2, { x: 300, rotation: 10, opacity: 0, duration: 0.8, ease: "power2.in" });
-                gsap.to(card3, { y: -200, scale: 1.1, zIndex: 22, duration: 1, delay: 0.2, ease: "power3.out" });
+                gsap.to(card3, {
+                    y: -200,
+                    scale: 1.1,
+                    height: "auto", /* Expand */
+                    maxHeight: "350px",
+                    overflow: "auto",
+                    zIndex: 22,
+                    duration: 1,
+                    delay: 0.2,
+                    ease: "power3.out"
+                });
                 step = 3;
             }
             // Step 3: Card 3 -> Reset All
@@ -232,10 +261,29 @@ function setupEnvelope() {
                     }
                 });
 
-                // Drop active card (Card 3)
-                resetTl.to(card3, { y: 0, scale: 1, opacity: 1, zIndex: 3, duration: 0.5, ease: "power2.in" })
-                    // Reset others
-                    .set([card1, card2], { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1, clearProps: "zIndex" })
+                // 1. Drop active card (Card 3) back in (and shrink)
+                resetTl.to(card3, {
+                    y: 0,
+                    scale: 1,
+                    height: 150, /* Shrink back */
+                    maxHeight: 150,
+                    overflow: "hidden",
+                    opacity: 1,
+                    zIndex: 3,
+                    duration: 0.5,
+                    ease: "power2.in"
+                })
+                    // 2. Put hidden cards (1 & 2) back in original places (instant/fast)
+                    .set([card1, card2], {
+                        x: 0, y: 0,
+                        rotation: 0,
+                        scale: 1,
+                        height: 150, /* Reset height */
+                        maxHeight: 150,
+                        overflow: "hidden",
+                        opacity: 1,
+                        clearProps: "zIndex"
+                    })
                     .set(".card-1", { zIndex: 5 })
                     .set(".card-2", { zIndex: 4 })
                     .set(".card-3", { zIndex: 3 })
