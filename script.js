@@ -254,6 +254,31 @@ function setupEnvelope() {
                 });
                 step = 3;
             }
+            // Helper to manage video playback with Autoplay Fallback
+            function playVideo(index) {
+                videos.forEach((v, i) => {
+                    if (i === index) {
+                        v.currentTime = 0; // Restart
+                        v.muted = false; // Try unmuted first
+
+                        // Robust Playback Logic
+                        const playPromise = v.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(error => {
+                                console.warn("Auto-play prevented (Audio). Falling back to Muted.", error);
+                                // Fallback: Mute and play
+                                v.muted = true;
+                                v.play().catch(e => console.error("Playback failed even when muted:", e));
+                            });
+                        }
+                    } else {
+                        v.pause();
+                        // v.muted = true; // Optional: Keep muted just in case
+                    }
+                });
+            }
+
+    // Initial State: Hide all cards
             // Step 3: Card 3 -> Reset All
             else if (step === 3) {
                 const resetTl = gsap.timeline({
