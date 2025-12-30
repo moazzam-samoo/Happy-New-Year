@@ -18,6 +18,7 @@ window.addEventListener('resize', () => {
 function init() {
     setupIntro();
     setupEnvelope();
+    setupGallery();
 }
 
 // Scene 1: Cinematic Intro Animation
@@ -77,6 +78,27 @@ function setupIntro() {
 
 // Start
 init();
+
+// Scene 4: Mystery Wishes Reveal
+function setupWishes() {
+    gsap.utils.toArray(".flip-card-container").forEach((container, i) => {
+        ScrollTrigger.create({
+            trigger: container,
+            start: "top 80%", // Flip when card enters near bottom of screen
+            onEnter: () => {
+                const card = container.querySelector(".flip-card");
+                card.classList.add("flipped");
+
+                // Add particle effect logic here later if needed
+            },
+            // Optional: Flip back when scrolling up
+            onLeaveBack: () => {
+                const card = container.querySelector(".flip-card");
+                card.classList.remove("flipped");
+            }
+        });
+    });
+}
 
 // Scene 3: Horizontal Playlist Scroll
 function setupGallery() {
