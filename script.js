@@ -16,6 +16,25 @@ window.addEventListener('resize', () => {
 
 // Initial Setup
 function init() {
+    // Initialize Lenis for Smooth Scroll
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+    });
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Sync ScrollTrigger with Lenis
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000); // Convert to ms
+    });
+    gsap.ticker.lagSmoothing(0);
+
     setupIntro();
     setupEnvelope();
     setupGallery();
@@ -166,62 +185,63 @@ function setupGallery() {
     });
 }
 
-// Scene 2: Interactive Envelope Reveal (Click to Open)
+// Scene 2: Interactive Envelope Reveal (Click to Open Sequence)
 function setupEnvelope() {
-    const envelopeSection = document.querySelector("#envelope-section");
     const envelope = document.querySelector(".envelope-wrapper");
+    const card1 = document.querySelector(".card-1");
+    const card2 = document.querySelector(".card-2");
+    const card3 = document.querySelector(".card-3");
 
-    // Create the timeline but PAUSE it initially
-    const tl = gsap.timeline({ paused: true });
+    // Timeline to Open Envelope and Show Card 1
+    const openTl = gsap.timeline({ paused: true });
+    openTl.to(".envelope-flap", { rotateX: 180, duration: 1, ease: "power2.inOut" })
+        .to(".card-1", { y: -200, scale: 1.1, zIndex: 20, duration: 1, ease: "power3.out" }, "-=0.5");
 
-    tl.to(".envelope-flap", {
-        rotateX: 180,
-        duration: 1.2, /* Slower */
-        ease: "power2.inOut"
-    })
-        .to(".letter-card", {
-            y: -180,
-            scale: 1.2,
-            zIndex: 20,
-            duration: 1.5,
-            ease: "power3.out" /* Smoother rise */
-        }, "-=0.6")
-        .from(".letter-card p", {
-            opacity: 0,
-            y: 10,
-            stagger: 0.1,
-            duration: 0.5
-        }, "-=0.5");
+    let step = 0; // 0: Closed, 1: Open(Card1), 2: Card2, 3: Card3
 
-    // Click Interaction
-    let isOpen = false;
     if (envelope) {
         envelope.addEventListener("click", () => {
-            if (!isOpen) {
-                tl.play();
-                isOpen = true;
-
-                // Optional: Add a pointer cursor hint or remove it after click
-                envelope.style.cursor = "default";
-            } else {
-                // Optional: Click to close? For now, let's keep it open to read.
-                // tl.reverse(); 
-                // isOpen = false;
+            if (step === 0) {
+                // Open Envelope
+                openTl.play();
+                step = 1;
+                envelope.style.cursor = "default"; // Change cursor interaction logic if needed
             }
         });
-
-        // Add cursor pointer to indicate clickability
-        envelope.style.cursor = "pointer";
     }
 
-    // Pinning Logic (Keep user focused on the envelope until they scroll past)
-    // We remove the scrub animation but keep the pin so it stays in view
+    // Sequence Interaction: specific click handlers for cards
+    if (card1) {
+        card1.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent bubbling to envelope
+            if (step === 1) {
+                // Move Card 1 Away, Show Card 2
+                gsap.to(card1, { x: -300, rotation: -10, opacity: 0, duration: 0.8, ease: "power2.in" });
+                gsap.to(card2, { y: -200, scale: 1.1, zIndex: 21, duration: 1, delay: 0.2, ease: "power3.out" }); // Pop up Card 2
+                step = 2;
+            }
+        });
+        card1.style.cursor = "pointer";
+    }
+
+    if (card2) {
+        card2.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (step === 2) {
+                // Move Card 2 Away, Show Card 3
+                gsap.to(card2, { x: 300, rotation: 10, opacity: 0, duration: 0.8, ease: "power2.in" });
+                gsap.to(card3, { y: -200, scale: 1.1, zIndex: 22, duration: 1, delay: 0.2, ease: "power3.out" }); // Pop up Card 3
+                step = 3;
+            }
+        });
+        card2.style.cursor = "pointer";
+    }
+
+    // Pinning Logic
     ScrollTrigger.create({
         trigger: "#envelope-section",
         start: "top top",
-        end: "+=800", // Shorter pin since we don't need deep scrub
+        end: "+=1200", // Increased pin duration for reading time
         pin: true,
-        // No animation linked here, just pinning
     });
-
 }

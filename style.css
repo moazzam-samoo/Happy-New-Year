@@ -304,17 +304,50 @@ h3,
     width: 270px;
     height: 180px;
     /* Initially hidden inside */
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
+    /* More opaque for readability */
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    z-index: 5;
     transition: transform 0.5s;
     font-size: 0.9rem;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+    /* Default Z-Index - Script will manage stacking */
+    transform-origin: bottom center;
+}
+
+/* Specific Stacking */
+.card-1 {
+    z-index: 5;
+}
+
+.card-2 {
+    z-index: 4;
+}
+
+.card-3 {
+    z-index: 3;
+}
+
+left: 15px;
+width: 270px;
+height: 180px;
+/* Initially hidden inside */
+background: rgba(255, 255, 255, 0.9);
+padding: 20px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+z-index: 5;
+transition: transform 0.5s;
+font-size: 0.9rem;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .letter-card h2 {
