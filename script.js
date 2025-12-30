@@ -254,31 +254,6 @@ function setupEnvelope() {
                 });
                 step = 3;
             }
-            // Helper to manage video playback with Autoplay Fallback
-            function playVideo(index) {
-                videos.forEach((v, i) => {
-                    if (i === index) {
-                        v.currentTime = 0; // Restart
-                        v.muted = false; // Try unmuted first
-
-                        // Robust Playback Logic
-                        const playPromise = v.play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(error => {
-                                console.warn("Auto-play prevented (Audio). Falling back to Muted.", error);
-                                // Fallback: Mute and play
-                                v.muted = true;
-                                v.play().catch(e => console.error("Playback failed even when muted:", e));
-                            });
-                        }
-                    } else {
-                        v.pause();
-                        // v.muted = true; // Optional: Keep muted just in case
-                    }
-                });
-            }
-
-    // Initial State: Hide all cards
             // Step 3: Card 3 -> Reset All
             else if (step === 3) {
                 const resetTl = gsap.timeline({
@@ -322,13 +297,107 @@ function setupEnvelope() {
         envelope.style.cursor = "pointer";
     }
 
-    // Remove old individual listeners (Logic replaced above)
-
     // Pinning Logic
     ScrollTrigger.create({
         trigger: "#envelope-section",
         start: "top top",
         end: "+=1200",
         pin: true,
+    });
+}
+
+// Scene 4: Cinematic Video Memories
+function setupMemories() {
+    console.log("Setting up Memories...");
+    // Ensure we select cards inside the memories section to avoid conflicts
+    const cards = gsap.utils.toArray("#memories-section .memory-card");
+    const videos = gsap.utils.toArray("#memories-section video");
+
+    if (cards.length === 0) {
+        console.warn("No memory cards found!");
+        return;
+    }
+
+    // Helper to manage video playback with Autoplay Fallback
+    function playVideo(index) {
+        videos.forEach((v, i) => {
+            if (i === index) {
+                v.currentTime = 0; // Restart
+                v.muted = false; // Try unmuted first
+
+                const playPromise = v.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn("Auto-play prevented (Audio). Falling back to Muted.", error);
+                        // Fallback: Mute and play
+                        v.muted = true;
+                        v.play().catch(e => console.error("Playback failed even when muted:", e));
+                    });
+                }
+            } else {
+                v.pause();
+                if (v) v.muted = true; // Optional safety
+            }
+        });
+    }
+
+    // Initial State: Hide all cards
+    gsap.set(cards, { opacity: 0, visibility: "hidden", scale: 0.8, y: 100 });
+
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: "#memories-section",
+            start: "top top",
+            end: "+=" + (cards.length * 1500),
+            pin: true,
+            scrub: 1,
+        }
+    });
+
+    cards.forEach((card, i) => {
+        // 1. Enter Animation
+        tl.to(card, {
+            opacity: 1,
+            visibility: "visible",
+            scale: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out",
+            onStart: () => playVideo(i),
+            onReverseComplete: () => {
+                if (i > 0) playVideo(i - 1);
+                else if (videos[i]) videos[i].pause();
+            }
+        })
+            // 2. Hold
+            .to(card, {
+                opacity: 1,
+                duration: 3
+            });
+
+        // 3. Exit (Fade out unless last)
+        if (i < cards.length - 1) {
+            tl.to(card, {
+                opacity: 0,
+                scale: 0.9,
+                y: -50,
+                duration: 0.8,
+                ease: "power2.in"
+            });
+        }
+    });
+}
+
+function setupFinale() {
+    // Basic Finale Animations
+    gsap.from("#finale-section .finale-content", {
+        scrollTrigger: {
+            trigger: "#finale-section",
+            start: "top 70%"
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out"
     });
 }
