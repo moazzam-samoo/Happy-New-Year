@@ -3,6 +3,8 @@
     --bg-gradient-start: #FFD1DC;
     --bg-gradient-end: #E0F7FA;
     --accent-pink: #E91E63;
+    --deep-maroon: #800000;
+    /* New Maroon Color */
     --text-main: #4A4A4A;
     --text-weaker: #6A6A6A;
     --glass-bg: rgba(255, 255, 255, 0.25);
@@ -397,13 +399,6 @@ h3,
 .music-card.active {
     border: 2px solid var(--accent-pink);
     box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
-}
-
-.signature {
-    margin-top: 15px;
-    font-family: 'Parisienne', cursive;
-    font-size: 1.2rem;
-    color: var(--accent-pink);
 }
 
 /* Wishes Section */
