@@ -302,7 +302,8 @@ h3,
     top: 10px;
     left: 15px;
     width: 270px;
-    height: 180px;
+    height: auto;
+    min-height: 180px;
     /* Initially hidden inside */
     background: rgba(255, 255, 255, 0.95);
     /* More opaque for readability */
