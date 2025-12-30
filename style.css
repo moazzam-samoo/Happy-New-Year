@@ -304,6 +304,12 @@ h3,
     width: 270px;
     height: auto;
     min-height: 180px;
+    max-height: 300px;
+    /* Limit height so it doesn't break layout */
+    overflow-y: auto;
+    /* Scroll if text is too long */
+    scrollbar-width: thin;
+    /* Firefox */
     /* Initially hidden inside */
     background: rgba(255, 255, 255, 0.95);
     /* More opaque for readability */

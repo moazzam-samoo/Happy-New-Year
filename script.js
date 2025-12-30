@@ -203,72 +203,52 @@ function setupEnvelope() {
 
     let step = 0; // 0: Closed, 1: Open(Card1), 2: Card2, 3: Card3
 
+    // Unified Click Interaction (Click anywhere on envelope/cards to progress)
     if (envelope) {
         envelope.addEventListener("click", () => {
+            // Step 0: Open Envelope -> Show Card 1
             if (step === 0) {
-                // Open Envelope
                 openTl.play();
                 step = 1;
-                envelope.style.cursor = "default"; // Change cursor interaction logic if needed
+                envelope.style.cursor = "pointer";
             }
-        });
-    }
-
-    // Sequence Interaction: specific click handlers for cards
-    if (card1) {
-        card1.addEventListener("click", (e) => {
-            e.stopPropagation(); // Prevent bubbling to envelope
-            if (step === 1) {
-                // Move Card 1 Away, Show Card 2
+            // Step 1: Card 1 -> Show Card 2
+            else if (step === 1) {
                 gsap.to(card1, { x: -300, rotation: -10, opacity: 0, duration: 0.8, ease: "power2.in" });
-                gsap.to(card2, { y: -200, scale: 1.1, zIndex: 21, duration: 1, delay: 0.2, ease: "power3.out" }); // Pop up Card 2
+                gsap.to(card2, { y: -200, scale: 1.1, zIndex: 21, duration: 1, delay: 0.2, ease: "power3.out" });
                 step = 2;
             }
-        });
-        card1.style.cursor = "pointer";
-    }
-
-    if (card2) {
-        card2.addEventListener("click", (e) => {
-            e.stopPropagation();
-            if (step === 2) {
-                // Move Card 2 Away, Show Card 3
+            // Step 2: Card 2 -> Show Card 3
+            else if (step === 2) {
                 gsap.to(card2, { x: 300, rotation: 10, opacity: 0, duration: 0.8, ease: "power2.in" });
-                gsap.to(card3, { y: -200, scale: 1.1, zIndex: 22, duration: 1, delay: 0.2, ease: "power3.out" }); // Pop up Card 3
+                gsap.to(card3, { y: -200, scale: 1.1, zIndex: 22, duration: 1, delay: 0.2, ease: "power3.out" });
                 step = 3;
-
-                // Change cursor for reset hint
-                card3.style.cursor = "pointer";
             }
-        });
-        card2.style.cursor = "pointer";
-    }
-
-    // Reset Logic on Card 3
-    if (card3) {
-        card3.addEventListener("click", (e) => {
-            e.stopPropagation();
-            if (step === 3) {
-                // Reset Function
+            // Step 3: Card 3 -> Reset All
+            else if (step === 3) {
                 const resetTl = gsap.timeline({
                     onComplete: () => {
-                        step = 0; // Reset state to closed
-                        envelope.style.cursor = "pointer"; // Ready to open again
+                        step = 0; // Reset state
                     }
                 });
 
-                // 1. Drop active card (Card 3) back in
+                // Drop active card (Card 3)
                 resetTl.to(card3, { y: 0, scale: 1, opacity: 1, zIndex: 3, duration: 0.5, ease: "power2.in" })
-                    // 2. Put hidden cards (1 & 2) back in original places (instant/fast)
+                    // Reset others
                     .set([card1, card2], { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1, clearProps: "zIndex" })
                     .set(".card-1", { zIndex: 5 })
                     .set(".card-2", { zIndex: 4 })
                     .set(".card-3", { zIndex: 3 })
-                    // 3. Close the envelope flap
+                    // Close flap
                     .to(".envelope-flap", { rotateX: 0, duration: 0.8, ease: "power2.inOut" });
             }
         });
+
+        // Ensure cursor remains pointer
+        envelope.style.cursor = "pointer";
     }
+
+    // Remove old individual listeners (Logic replaced above)
 
     // Pinning Logic
     ScrollTrigger.create({
