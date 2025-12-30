@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy New Year 2026</title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <div id="smooth-wrapper">
         <div id="smooth-content">
-            
+
             <!-- Sections placeholder -->
             <main>
+                <!-- Scene 1: Hero -->
+                <section id="hero-section" class="panel">
+                    <div class="parallax-bg layer-1"></div>
+                    <div class="parallax-bg layer-2"></div>
+
+                    <div class="hero-content">
+                        <h1 class="main-title">Happy New Year <br> <span class="accent-text">2026</span></h1>
+                        <p class="subtitle">A little wish… just for you</p>
+                        <div class="scroll-indicator">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                    </div>
+
+                    <!-- Floating Elements -->
+                    <div class="floating-butterflies">
+                        <i class="fa-solid fa-dove butterfly b1"></i>
+                        <i class="fa-solid fa-dove butterfly b2"></i>
+                        <i class="fa-solid fa-dove butterfly b3"></i>
+                    </div>
+                </section>
+
                 <!-- Sections will be injected here during implementation -->
             </main>
 
@@ -36,8 +60,9 @@
          but we'll leave the script here as a placeholder for the "Cinematic" requirement or fallback to native/lenis if needed. 
          For this mostly open web project without paid plugins, we might use Lenis or just native for mobile performance as requested. 
          Let's stick to GSAP Core + ScrollTrigger for now. -->
-    
+
     <!-- App Script -->
     <script src="script.js"></script>
 </body>
+
 </html>
