@@ -341,23 +341,6 @@ h3,
     z-index: 3;
 }
 
-left: 15px;
-width: 270px;
-height: 180px;
-/* Initially hidden inside */
-background: rgba(255, 255, 255, 0.9);
-padding: 20px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-text-align: center;
-z-index: 5;
-transition: transform 0.5s;
-font-size: 0.9rem;
-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
-
 .letter-card h2 {
     color: var(--accent-pink);
     margin-bottom: 10px;
@@ -380,80 +363,6 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     color: var(--accent-pink);
 }
 
-/* Playlist Section (Horizontal Scroll) */
-#playlist-section {
-    background: transparent;
-    z-index: 7;
-}
-
-.horizontal-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-left: 10vw;
-}
-
-.h-title h2 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    color: var(--text-main);
-}
-
-.cards-container {
-    display: flex;
-    gap: 5vw;
-    width: max-content;
-    /* Important for horizontal calculation */
-    padding-right: 10vw;
-}
-
-.music-card {
-    width: 250px;
-    height: 350px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-}
-
-.music-card:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 15px 40px rgba(233, 30, 99, 0.2);
-    border-color: var(--accent-pink);
-}
-
-.card-img {
-    width: 100%;
-    height: 180px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3rem;
-    color: white;
-}
-
-.music-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-    color: var(--text-main);
-}
-
-.music-card p {
-    font-size: 0.9rem;
-    color: var(--text-weaker);
-}
-
-/* Active State for selected card */
-.music-card.active {
-    border: 2px solid var(--accent-pink);
-    box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
-}
 
 /* Wishes Section */
 #wishes-section {
