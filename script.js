@@ -409,7 +409,7 @@ function setupMemories() {
     ScrollTrigger.create({
         trigger: "#memories-section",
         start: "top top",
-        end: "+=6000", // Increased pin duration for loops
+        end: "+=1500", // Reduced significantly so user can scroll away easily
         pin: true,
         onEnter: () => {
             if (currentIndex === 0 && !isAnimating) {
