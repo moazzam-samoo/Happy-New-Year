@@ -1,0 +1,66 @@
+:root {
+    /* Color Palette: Pastel Pinks & Soft Whites */
+    --bg-gradient-start: #FFD1DC;
+    --bg-gradient-end: #E0F7FA;
+    --accent-pink: #E91E63;
+    --text-main: #4A4A4A;
+    --text-weaker: #6A6A6A;
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-main);
+    background: linear-gradient(135deg, var(--bg-gradient-start), #fff, var(--bg-gradient-end));
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, .script-font {
+    font-family: 'Parisienne', cursive;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+}
+
+.preserve-3d {
+    transform-style: preserve-3d;
+}
+
+.perspective-container {
+    perspective: 1000px;
+}
+
+/* Background Animation */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Smooth Scroll Containers */
+#smooth-wrapper {
+    width: 100%;
+    height: 100%;
+}
+#smooth-content {
+    width: 100%;
+}
