@@ -19,6 +19,7 @@ function init() {
     setupIntro();
     setupEnvelope();
     setupGallery();
+    setupWishes();
 }
 
 // Scene 1: Cinematic Intro Animation
@@ -78,6 +79,42 @@ function setupIntro() {
 
 // Start
 init();
+
+// Scene 5: Simple Heart Particle System
+const btn = document.getElementById("send-love-btn");
+if (btn) {
+    btn.addEventListener("click", (e) => {
+        // Create 10 hearts
+        for (let i = 0; i < 10; i++) {
+            createHeart(e.clientX, e.clientY);
+        }
+
+        // Button Feedback
+        btn.textContent = "Thank you! ❤️";
+        gsap.to(btn, { scale: 1.1, duration: 0.1, yoyo: true, repeat: 1 });
+    });
+}
+
+function createHeart(x, y) {
+    const heart = document.createElement("i");
+    heart.classList.add("fa-solid", "fa-heart", "floating-heart");
+    document.body.appendChild(heart);
+
+    // Set initial position
+    gsap.set(heart, { x: x, y: y, opacity: 1, scale: 0.5 });
+
+    // Animate
+    gsap.to(heart, {
+        x: x + (Math.random() - 0.5) * 200, // Random X spread
+        y: y - 300 - Math.random() * 200,   // Random Upward distance
+        rotation: (Math.random() - 0.5) * 90,
+        opacity: 0,
+        scale: 1.5,
+        duration: 2 + Math.random(),
+        ease: "power1.out",
+        onComplete: () => heart.remove()
+    });
+}
 
 // Scene 4: Mystery Wishes Reveal
 function setupWishes() {
