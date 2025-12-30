@@ -176,16 +176,16 @@ function setupEnvelope() {
 
     tl.to(".envelope-flap", {
         rotateX: 180,
-        duration: 0.8,
-        ease: "power1.inOut"
+        duration: 1.2, /* Slower */
+        ease: "power2.inOut"
     })
         .to(".letter-card", {
             y: -180,
             scale: 1.2,
             zIndex: 20,
-            duration: 1,
-            ease: "back.out(1.2)"
-        }, "-=0.4")
+            duration: 1.5,
+            ease: "power3.out" /* Smoother rise */
+        }, "-=0.6")
         .from(".letter-card p", {
             opacity: 0,
             y: 10,
