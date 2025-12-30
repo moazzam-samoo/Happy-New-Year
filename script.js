@@ -42,7 +42,8 @@ function init() {
     setupIntro();
     setupEnvelope();
     setupGallery();
-    setupWishes();
+    setupMemories(); // New Video Section
+    setupFinale();
 }
 
 // Scene 1: Cinematic Intro Animation
