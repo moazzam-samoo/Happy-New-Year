@@ -166,40 +166,63 @@ function setupGallery() {
     });
 }
 
-// Scene 2: Interactive Envelope Reveal
+// Scene 2: Interactive Envelope Reveal (Click to Open)
 function setupEnvelope() {
+    const envelopeSection = document.querySelector("#envelope-section");
+    const envelope = document.querySelector(".envelope-wrapper");
 
-    // Pin the section so we can scrub the animation
+    // Create the timeline but PAUSE it initially
+    const tl = gsap.timeline({ paused: true });
+
+    tl.to(".envelope-flap", {
+        rotateX: 180,
+        duration: 0.8,
+        ease: "power1.inOut"
+    })
+        .to(".letter-card", {
+            y: -180,
+            scale: 1.2,
+            zIndex: 20,
+            duration: 1,
+            ease: "back.out(1.2)"
+        }, "-=0.4")
+        .from(".letter-card p", {
+            opacity: 0,
+            y: 10,
+            stagger: 0.1,
+            duration: 0.5
+        }, "-=0.5");
+
+    // Click Interaction
+    let isOpen = false;
+    if (envelope) {
+        envelope.addEventListener("click", () => {
+            if (!isOpen) {
+                tl.play();
+                isOpen = true;
+
+                // Optional: Add a pointer cursor hint or remove it after click
+                envelope.style.cursor = "default";
+            } else {
+                // Optional: Click to close? For now, let's keep it open to read.
+                // tl.reverse(); 
+                // isOpen = false;
+            }
+        });
+
+        // Add cursor pointer to indicate clickability
+        envelope.style.cursor = "pointer";
+    }
+
+    // Pinning Logic (Keep user focused on the envelope until they scroll past)
+    // We remove the scrub animation but keep the pin so it stays in view
     ScrollTrigger.create({
         trigger: "#envelope-section",
         start: "top top",
-        end: "+=1500", // Pin for 1500px of scroll
+        end: "+=800", // Shorter pin since we don't need deep scrub
         pin: true,
-        scrub: 1,
-        animation: gsap.timeline()
-            // 1. Zoom/Fade out hero slightly (optional, handled by next section overlap usually, but let's be safe)
-
-            // 2. Open Flap
-            .to(".envelope-flap", {
-                rotateX: 180,
-                duration: 1,
-                ease: "power1.inOut"
-            })
-            // 3. Pull Letter Out and Scale Up
-            .to(".letter-card", {
-                y: -150, // Move up out of envelope
-                scale: 1.2, // Make it readable
-                zIndex: 20, // Bring to front
-                duration: 2,
-                ease: "power2.out"
-            }, "-=0.5") // Overlap slightly
-
-            // 4. Fade Text In cleanly (optional refined touch)
-            .from(".letter-card p", {
-                opacity: 0,
-                y: 10,
-                stagger: 0.2,
-                duration: 1
-            }, "-=1")
+        // No animation linked here, just pinning
     });
+
 }
+```
