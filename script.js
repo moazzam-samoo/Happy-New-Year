@@ -301,7 +301,6 @@ function setupEnvelope() {
     ScrollTrigger.create({
         trigger: "#envelope-section",
         start: "top top",
-```
         end: "+=1200",
         pin: true,
     });
@@ -362,10 +361,10 @@ function setupMemories() {
     // Video Playback Helper
     function playVideo(video, index) {
         if (!video) return;
-        
+
         video.currentTime = 0;
         video.muted = false; // Try sound
-        
+
         const playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(err => {
@@ -377,14 +376,14 @@ function setupMemories() {
 
         // AUTO CHANGE LOGIC: When video ends, go next
         video.onended = () => {
-             console.log(`Video ${ index } ended.Next...`);
-             if (index < cards.length - 1) {
-                 hideCard(index, index + 1);
-             } else {
-                 // Final video ended? Maybe unpin or just stay
-                 console.log("All memories sequence complete.");
-                 // Optional: Scroll to footer?
-             }
+            console.log(`Video ${index} ended. Next...`);
+            if (index < cards.length - 1) {
+                hideCard(index, index + 1);
+            } else {
+                // Final video ended? Maybe unpin or just stay
+                console.log("All memories sequence complete.");
+                // Optional: Scroll to footer?
+            }
         };
     }
 
