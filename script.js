@@ -223,29 +223,59 @@ function setupEnvelope() {
                 gsap.to(card1, { x: -300, rotation: -10, opacity: 0, duration: 0.8, ease: "power2.in" });
                 gsap.to(card2, { y: -200, scale: 1.1, zIndex: 21, duration: 1, delay: 0.2, ease: "power3.out" }); // Pop up Card 2
                 step = 2;
+                card1.style.cursor = "pointer";
             }
-        });
-        card1.style.cursor = "pointer";
-    }
 
-    if (card2) {
-        card2.addEventListener("click", (e) => {
-            e.stopPropagation();
-            if (step === 2) {
-                // Move Card 2 Away, Show Card 3
-                gsap.to(card2, { x: 300, rotation: 10, opacity: 0, duration: 0.8, ease: "power2.in" });
-                gsap.to(card3, { y: -200, scale: 1.1, zIndex: 22, duration: 1, delay: 0.2, ease: "power3.out" }); // Pop up Card 3
-                step = 3;
+            if (card2) {
+                card2.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (step === 2) {
+                        // Move Card 2 Away, Show Card 3
+                        gsap.to(card2, { x: 300, rotation: 10, opacity: 0, duration: 0.8, ease: "power2.in" });
+                        gsap.to(card3, { y: -200, scale: 1.1, zIndex: 22, duration: 1, delay: 0.2, ease: "power3.out" }); // Pop up Card 3
+                        step = 3;
+
+                        // Change cursor for reset hint
+                        card3.style.cursor = "pointer"; // Make sure final card is clickable
+                    }
+                });
+                card2.style.cursor = "pointer";
             }
-        });
-        card2.style.cursor = "pointer";
-    }
 
-    // Pinning Logic
-    ScrollTrigger.create({
-        trigger: "#envelope-section",
-        start: "top top",
-        end: "+=1200", // Increased pin duration for reading time
-        pin: true,
-    });
-}
+            // Reset Logic on Card 3
+            if (card3) {
+                card3.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (step === 3) {
+                        // Reset Function
+                        const resetTl = gsap.timeline({
+                            onComplete: () => {
+                                step = 0; // Reset state to closed
+                                envelope.style.cursor = "pointer"; // Ready to open again
+                            }
+                        });
+
+                        // 1. Drop active card (Card 3) back in
+                        resetTl.to(card3, { y: 0, scale: 1, opacity: 1, zIndex: 3, duration: 0.5, ease: "power2.in" })
+                            // 2. Put hidden cards (1 & 2) back in original places (instant/fast)
+                            .set([card1, card2], { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1, clearProps: "zIndex" }) // clearProps specific props if needed
+                            .set(".card-1", { zIndex: 5 }) // Reset order
+                            .set(".card-2", { zIndex: 4 })
+                            .set(".card-3", { zIndex: 3 })
+                            // 3. Close the envelope flap
+                            .to(".envelope-flap", { rotateX: 0, duration: 0.8, ease: "power2.inOut" });
+
+                        // Reset specific transforms if 'set' didn't catch complex ones or just to be safe:
+                        // We mainly rely on .set clearing/resetting values.
+                    }
+                });
+            }
+
+            // Pinning Logic
+            ScrollTrigger.create({
+                trigger: "#envelope-section",
+                start: "top top",
+                end: "+=1200", // Increased pin duration for reading time
+                pin: true,
+            });
+        }
