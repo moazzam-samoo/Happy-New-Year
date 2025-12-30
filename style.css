@@ -560,10 +560,13 @@ h3,
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
-    max-width: 400px;
-    height: 70vh;
-    max-height: 600px;
+    width: 85%;
+    /* Slightly narrower */
+    max-width: 350px;
+    /* Reduced max-width */
+    height: 55vh;
+    /* Reduced height */
+    max-height: 500px;
 
     opacity: 0;
     visibility: hidden;
