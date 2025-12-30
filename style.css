@@ -596,21 +596,23 @@ h3,
 }
 
 .caption-box {
-    margin-top: 10px;
-    height: 40px;
+    margin-top: 25px;
+    /* Increased space */
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .caption-box p {
-    font-size: 1.8rem;
+    font-size: 2rem;
     /* Larger for script font */
-    color: var(--deep-maroon);
+    color: #e91e63;
+    /* Darker strong Pink per user request */
+    font-weight: 700;
     font-family: 'Parisienne', cursive;
-    /* Stylish font */
     margin: 0;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 /* =========================================

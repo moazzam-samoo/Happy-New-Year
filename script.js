@@ -380,9 +380,21 @@ function setupMemories() {
             if (index < cards.length - 1) {
                 hideCard(index, index + 1);
             } else {
-                // Final video ended? Maybe unpin or just stay
-                console.log("All memories sequence complete.");
-                // Optional: Scroll to footer?
+                // Final video ended -> Scroll to Finale
+                console.log("All memories sequence complete. Scrolling to Finale...");
+
+                // Unpin or just scroll past
+                const finale = document.querySelector("#finale-section");
+                if (finale) {
+                    // Using Lenis if available or native
+                    window.scrollTo({
+                        top: finale.offsetTop,
+                        behavior: 'smooth'
+                    });
+
+                    // Also force GSAP to update if needed
+                    gsap.to(window, { scrollTo: finale, duration: 1.5, ease: "power2.inOut" });
+                }
             }
         };
     }
