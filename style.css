@@ -510,48 +510,6 @@ h3,
     }
 }
 
-/* --- Mobile Responsiveness --- */
-@media (max-width: 768px) {
-    .main-title {
-        font-size: 3rem;
-    }
-
-    .accent-text {
-        font-size: 4rem;
-    }
-
-    .subtitle {
-        font-size: 1rem;
-    }
-
-    .b2 {
-        top: 75%;
-        right: 5%;
-        font-size: 1.5rem;
-    }
-
-    .b3 {
-        top: 20%;
-        right: 5%;
-        font-size: 1.8rem;
-    }
-
-    .hero-content {
-        padding: 0 20px;
-    }
-
-    /* Mobile Memories Adjustments */
-    .memories-intro h2 {
-        font-size: 2rem;
-    }
-
-    .memory-card {
-        width: 95%;
-        height: 60vh;
-        max-height: 500px;
-    }
-}
-
 /* =========================================
    Scene 4: Cinematic Video Memories (Global Styles)
    ========================================= */
@@ -564,7 +522,6 @@ h3,
     justify-content: flex-start;
     padding-top: 5vh;
     z-index: 20;
-    /* High z-index to sit above BG */
     overflow: hidden;
     background: transparent;
     position: relative;
@@ -594,17 +551,15 @@ h3,
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* Align closer to top */
     padding-top: 20px;
 }
 
 .memory-card {
-    position: absolute;
+    position: absolute !important;
+    /* Force Stacking */
     top: 0;
     left: 50%;
-    /* Center start point */
     transform: translateX(-50%);
-    /* Shift back by 50% width to center */
     width: 90%;
     max-width: 400px;
     height: 70vh;
@@ -617,8 +572,6 @@ h3,
     flex-direction: column;
     align-items: center;
     border-radius: 20px;
-
-    /* Hardware acceleration */
     will-change: transform, opacity;
 }
 
@@ -628,7 +581,6 @@ h3,
     padding: 10px;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.5);
-    /* Stronger glass */
     backdrop-filter: blur(15px);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     display: flex;
@@ -658,10 +610,12 @@ h3,
     margin: 0;
 }
 
-/* --- Mobile Responsiveness --- */
+/* =========================================
+   Mobile Responsiveness (Consolidated)
+   ========================================= */
 @media (max-width: 768px) {
 
-    /* Reduce Hero Text Size */
+    /* Hero Adjustments */
     .main-title {
         font-size: 3rem;
     }
@@ -674,7 +628,11 @@ h3,
         font-size: 1rem;
     }
 
-    /* Move Butterflies away from text */
+    .hero-content {
+        padding: 0 20px;
+    }
+
+    /* Butterflies */
     .b1 {
         top: 5%;
         left: 5%;
