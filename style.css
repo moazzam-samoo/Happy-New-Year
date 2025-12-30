@@ -314,11 +314,14 @@ h3,
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    /* Changed from center to prevent top clipping */
     align-items: center;
     text-align: center;
     transition: transform 0.5s;
     font-size: 0.9rem;
+    padding-top: 30px;
+    /* Add space at top since we removed center alignment */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 
     /* Default Z-Index - Script will manage stacking */
