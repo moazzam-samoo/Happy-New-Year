@@ -16,24 +16,28 @@ window.addEventListener('resize', () => {
 
 // Initial Setup
 function init() {
-    // Initialize Lenis for Smooth Scroll
-    const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smooth: true,
-    });
+    // Initialize Lenis for Smooth Scroll (Only if library is loaded)
+    if (typeof Lenis !== 'undefined') {
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smooth: true,
+        });
 
-    function raf(time) {
-        lenis.raf(time);
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
         requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
 
-    // Sync ScrollTrigger with Lenis
-    gsap.ticker.add((time) => {
-        lenis.raf(time * 1000); // Convert to ms
-    });
-    gsap.ticker.lagSmoothing(0);
+        // Sync ScrollTrigger with Lenis
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000); // Convert to ms
+        });
+        gsap.ticker.lagSmoothing(0);
+    } else {
+        console.warn("Lenis not loaded, falling back to native scroll.");
+    }
 
     setupIntro();
     setupEnvelope();
