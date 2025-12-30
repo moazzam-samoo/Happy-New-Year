@@ -604,10 +604,13 @@ h3,
 }
 
 .caption-box p {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-main);
+    font-size: 1.8rem;
+    /* Larger for script font */
+    color: var(--deep-maroon);
+    font-family: 'Parisienne', cursive;
+    /* Stylish font */
     margin: 0;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 /* =========================================

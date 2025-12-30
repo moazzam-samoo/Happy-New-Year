@@ -301,89 +301,104 @@ function setupEnvelope() {
     ScrollTrigger.create({
         trigger: "#envelope-section",
         start: "top top",
+```
         end: "+=1200",
         pin: true,
     });
 }
 
-// Scene 4: Cinematic Video Memories
+// Scene 4: Cinematic Video Memories (Auto-Play Sequencer)
 function setupMemories() {
     console.log("Setting up Memories...");
-    // Ensure we select cards inside the memories section to avoid conflicts
     const cards = gsap.utils.toArray("#memories-section .memory-card");
     const videos = gsap.utils.toArray("#memories-section video");
 
-    if (cards.length === 0) {
-        console.warn("No memory cards found!");
-        return;
-    }
-
-    // Helper to manage video playback with Autoplay Fallback
-    function playVideo(index) {
-        videos.forEach((v, i) => {
-            if (i === index) {
-                v.currentTime = 0; // Restart
-                v.muted = false; // Try unmuted first
-
-                const playPromise = v.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.warn("Auto-play prevented (Audio). Falling back to Muted.", error);
-                        // Fallback: Mute and play
-                        v.muted = true;
-                        v.play().catch(e => console.error("Playback failed even when muted:", e));
-                    });
-                }
-            } else {
-                v.pause();
-                if (v) v.muted = true; // Optional safety
-            }
-        });
-    }
+    if (cards.length === 0) return;
 
     // Initial State: Hide all cards
     gsap.set(cards, { opacity: 0, visibility: "hidden", scale: 0.8, y: 100 });
 
-    const tl = gsap.timeline({
-        scrollTrigger: {
-            trigger: "#memories-section",
-            start: "top top",
-            end: "+=" + (cards.length * 1500),
-            pin: true,
-            scrub: 1,
-        }
-    });
+    let currentIndex = 0;
+    let isAnimating = false;
 
-    cards.forEach((card, i) => {
-        // 1. Enter Animation
-        tl.to(card, {
+    // Transition Function
+    function showCard(index) {
+        if (index >= cards.length) return; // End of sequence
+        isAnimating = true;
+
+        const card = cards[index];
+        const video = videos[index];
+
+        // Animate In
+        gsap.to(card, {
             opacity: 1,
             visibility: "visible",
             scale: 1,
             y: 0,
             duration: 1,
             ease: "power2.out",
-            onStart: () => playVideo(i),
-            onReverseComplete: () => {
-                if (i > 0) playVideo(i - 1);
-                else if (videos[i]) videos[i].pause();
+            onComplete: () => {
+                isAnimating = false;
+                playVideo(video, index);
             }
-        })
-            // 2. Hold
-            .to(card, {
-                opacity: 1,
-                duration: 3
-            });
+        });
+    }
 
-        // 3. Exit (Fade out unless last)
-        if (i < cards.length - 1) {
-            tl.to(card, {
-                opacity: 0,
-                scale: 0.9,
-                y: -50,
-                duration: 0.8,
-                ease: "power2.in"
+    function hideCard(index, nextIndex) {
+        const card = cards[index];
+        // Animate Out
+        gsap.to(card, {
+            opacity: 0,
+            scale: 0.9,
+            y: -50,
+            duration: 0.8,
+            ease: "power2.in",
+            onComplete: () => {
+                showCard(nextIndex); // Chain next card
+            }
+        });
+    }
+
+    // Video Playback Helper
+    function playVideo(video, index) {
+        if (!video) return;
+        
+        video.currentTime = 0;
+        video.muted = false; // Try sound
+        
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(err => {
+                console.warn("Autoplay blocked, muting:", err);
+                video.muted = true;
+                video.play();
             });
+        }
+
+        // AUTO CHANGE LOGIC: When video ends, go next
+        video.onended = () => {
+             console.log(`Video ${ index } ended.Next...`);
+             if (index < cards.length - 1) {
+                 hideCard(index, index + 1);
+             } else {
+                 // Final video ended? Maybe unpin or just stay
+                 console.log("All memories sequence complete.");
+                 // Optional: Scroll to footer?
+             }
+        };
+    }
+
+    // ScrollTrigger Just to PIN and START the sequence
+    ScrollTrigger.create({
+        trigger: "#memories-section",
+        start: "top top",
+        end: "+=4000", // Fixed pin duration to allow watching
+        pin: true,
+        // scrub: true, // REMOVED SCRUB - Let time drive it
+        onEnter: () => {
+            if (currentIndex === 0 && !isAnimating) {
+                showCard(0);
+            }
         }
     });
 }
