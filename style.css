@@ -638,8 +638,12 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         font-size: 1.8rem;
     }
 
-    /* Ensure content has padding */
-    .hero-content {
-        padding: 0 20px;
+    .memories-intro h2 {
+        font-size: 2rem;
+    }
+
+    .memory-card {
+        width: 95%;
+        height: 70vh;
     }
 }
