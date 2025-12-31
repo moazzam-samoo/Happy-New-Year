@@ -216,6 +216,17 @@ function setupEnvelope() {
     // Unified Click Interaction (Click anywhere on envelope/cards to progress)
     if (envelope) {
         envelope.addEventListener("click", () => {
+            // AUDIO PRIMING HACK: Unlock audio context for later videos
+            // Since user is interacting here, we try to play/pause all memory videos
+            const allVideos = document.querySelectorAll("#memories-section video");
+            allVideos.forEach(v => {
+                v.muted = false; // Prepare for sound
+                v.play().then(() => {
+                    v.pause(); // Immediately pause
+                    v.currentTime = 0;
+                }).catch(e => console.log("Audio prime failed", e));
+            });
+
             // Step 0: Open Envelope -> Show Card 1
             if (step === 0) {
                 openTl.play();
