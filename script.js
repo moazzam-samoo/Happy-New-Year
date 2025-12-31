@@ -105,20 +105,69 @@ function setupIntro() {
 init();
 
 // Scene 5: Simple Heart Particle System
+// Scene 5: Simple Heart Particle System & Sequential Messages
 const btn = document.getElementById("send-love-btn");
 if (btn) {
+    const messages = [
+        "I Love You ❤️",
+        "I Love You More Shumli 💖",
+        "You are my Forever ♾️"
+    ];
+    let clickCount = 0;
+
     btn.addEventListener("click", (e) => {
-        // Create 10 hearts
-        for (let i = 0; i < 10; i++) {
+        // 1. Create Hearts
+        for (let i = 0; i < 15; i++) {
             createHeart(e.clientX, e.clientY);
         }
 
-        // Trigger Fireworks (Patakha)
+        // 2. Trigger Fireworks
         triggerFireworks();
 
-        // Button Feedback
-        btn.textContent = "My heart is always yours";
-        gsap.to(btn, { scale: 1.1, duration: 0.1, yoyo: true, repeat: 1 });
+        // 3. Show Sequential Message
+        const msgIndex = clickCount % messages.length;
+        createFloatingText(messages[msgIndex], e.clientX, e.clientY);
+
+        clickCount++; // Increment for next click
+
+        // Button Feedback Animation
+        gsap.to(btn, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+    });
+}
+
+function createFloatingText(text, x, y) {
+    const el = document.createElement("div");
+    el.classList.add("floating-text");
+    el.innerHTML = text;
+    document.body.appendChild(el);
+
+    // Initial State
+    gsap.set(el, {
+        x: x,
+        y: y - 50, // Start slightly above button
+        xPercent: -50,
+        yPercent: -50,
+        scale: 0.5,
+        opacity: 0
+    });
+
+    // Animate Up and Fade Out (Slower)
+    gsap.to(el, {
+        y: y - 250, // Float up higher
+        scale: 1.2,
+        opacity: 1,
+        duration: 2, // 2 Seconds entry (Slower)
+        ease: "power2.out",
+        onComplete: () => {
+            // Fade out after holding
+            gsap.to(el, {
+                opacity: 0,
+                y: y - 350,
+                duration: 1.5, // Slow fade out
+                delay: 1, // Hold for 1 second
+                onComplete: () => el.remove()
+            });
+        }
     });
 }
 
