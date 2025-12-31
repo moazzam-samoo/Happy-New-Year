@@ -114,7 +114,7 @@ if (btn) {
         }
 
         // Button Feedback
-        btn.textContent = "Thank you! ❤️";
+        btn.textContent = "My heart is always yours";
         gsap.to(btn, { scale: 1.1, duration: 0.1, yoyo: true, repeat: 1 });
     });
 }
