@@ -1,3 +1,27 @@
+/* Canvas Confetti Fix */
+canvas {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+    z-index: 99999 !important;
+}
+
+/* Floating Text Message */
+.floating-text {
+    position: fixed;
+    font-family: 'Parisienne', cursive;
+    font-size: 1.2rem;
+    color: #ff2e63;
+    /* Bright Pink */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px #ff2e63;
+    pointer-events: none;
+    z-index: 100000;
+    white-space: nowrap;
+}
+
 :root {
     /* Color Palette: Pastel Pinks & Soft Whites */
     --bg-gradient-start: #FFD1DC;

@@ -16,7 +16,7 @@ window.addEventListener('resize', () => {
 
 // Initial Setup
 function init() {
-    // Initialize Lenis for Smooth Scroll (Only if library is loaded)
+    // Initialize Lenis for Smooth Scroll
     if (typeof Lenis !== 'undefined') {
         const lenis = new Lenis({
             duration: 1.2,
@@ -41,7 +41,6 @@ function init() {
 
     setupIntro();
     setupEnvelope();
-    // Playlist Removed
     setupMemories();
     setupFinale();
 }
@@ -88,7 +87,7 @@ function setupIntro() {
         }
     });
 
-    // Butterfly scroll reaction (move faster than scroll)
+    // Butterfly scroll reaction
     gsap.to(".floating-butterflies", {
         yPercent: -20,
         ease: "none",
@@ -104,14 +103,16 @@ function setupIntro() {
 // Start
 init();
 
-// Scene 5: Simple Heart Particle System
-// Scene 5: Simple Heart Particle System & Sequential Messages
+// Scene 5: Simple Heart Particle System & Romantic Messages
 const btn = document.getElementById("send-love-btn");
 if (btn) {
+    // UPDATED: Romantic Messages List
     const messages = [
-        "I Love You ❤️",
-        "I Love You More Shumli 💖",
-        "You are my Forever ♾️"
+        "My heart is always yours ❤️",
+        "You have all of me 💖",
+        "Forever & Always ♾️",
+        "Caught it! Now keeping it 🌹",
+        "I love you endlessly 💕"
     ];
     let clickCount = 0;
 
@@ -131,7 +132,12 @@ if (btn) {
         clickCount++; // Increment for next click
 
         // Button Feedback Animation
-        gsap.to(btn, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+        gsap.to(btn, {
+            scale: 0.95,
+            duration: 0.1,
+            yoyo: true,
+            repeat: 1
+        });
     });
 }
 
@@ -141,30 +147,33 @@ function createFloatingText(text, x, y) {
     el.innerHTML = text;
     document.body.appendChild(el);
 
-    // Initial State
+    // Initial State - Fixed positioning
+    el.style.position = 'fixed';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.zIndex = "100000";
+
     gsap.set(el, {
-        x: x,
-        y: y - 50, // Start slightly above button
         xPercent: -50,
         yPercent: -50,
         scale: 0.5,
         opacity: 0
     });
 
-    // Animate Up and Fade Out (Slower)
+    // Animate Up and Fade Out
     gsap.to(el, {
-        y: y - 250, // Float up higher
+        y: -150, // Move up relative to starting position
         scale: 1.2,
         opacity: 1,
-        duration: 2, // 2 Seconds entry (Slower)
+        duration: 2,
         ease: "power2.out",
         onComplete: () => {
             // Fade out after holding
             gsap.to(el, {
                 opacity: 0,
                 y: y - 350,
-                duration: 1.5, // Slow fade out
-                delay: 1, // Hold for 1 second
+                duration: 1.5,
+                delay: 1,
                 onComplete: () => el.remove()
             });
         }
@@ -177,12 +186,17 @@ function createHeart(x, y) {
     document.body.appendChild(heart);
 
     // Set initial position
-    gsap.set(heart, { x: x, y: y, opacity: 1, scale: 0.5 });
+    gsap.set(heart, {
+        x: x,
+        y: y,
+        opacity: 1,
+        scale: 0.5
+    });
 
     // Animate
     gsap.to(heart, {
         x: x + (Math.random() - 0.5) * 200, // Random X spread
-        y: y - 300 - Math.random() * 200,   // Random Upward distance
+        y: y - 300 - Math.random() * 200, // Random Upward distance
         rotation: (Math.random() - 0.5) * 90,
         opacity: 0,
         scale: 1.5,
@@ -192,19 +206,16 @@ function createHeart(x, y) {
     });
 }
 
-// Scene 4: Mystery Wishes Reveal
+// Scene 4: Mystery Wishes Reveal (Flip Cards)
 function setupWishes() {
     gsap.utils.toArray(".flip-card-container").forEach((container, i) => {
         ScrollTrigger.create({
             trigger: container,
-            start: "top 80%", // Flip when card enters near bottom of screen
+            start: "top 80%",
             onEnter: () => {
                 const card = container.querySelector(".flip-card");
                 card.classList.add("flipped");
-
-                // Add particle effect logic here later if needed
             },
-            // Optional: Flip back when scrolling up
             onLeaveBack: () => {
                 const card = container.querySelector(".flip-card");
                 card.classList.remove("flipped");
@@ -213,87 +224,64 @@ function setupWishes() {
     });
 }
 
-// Scene 3: Horizontal Playlist Scroll
-function setupGallery() {
-
-    // We want the cards to move left as we scroll down
-    const container = document.querySelector(".cards-container");
-    const section = document.querySelector("#playlist-section");
-
-    // Calculate how far to move 
-    // (Container Width - Window Width + Left Padding)
-    // We use a functional value to handle resizes roughly, 
-    // but typically we'd recalculate on refresh.
-
-    // Simple robust calculation:
-    const getScrollAmount = () => -(container.scrollWidth - window.innerWidth + 100);
-
-    ScrollTrigger.create({
-        trigger: "#playlist-section",
-        start: "top top",
-        end: () => `+=${container.scrollWidth}`, // Scroll length proportional to width
-        pin: true,
-        scrub: 1,
-        // snap: 1 / (3 - 1), // Optional: Snap to cards
-        animation: gsap.to(container, {
-            x: getScrollAmount,
-            ease: "none"
-        })
-    });
-}
-
-// Scene 2: Interactive Envelope Reveal (Click to Open Sequence)
+// Scene 2: Interactive Envelope Reveal
 function setupEnvelope() {
     const envelope = document.querySelector(".envelope-wrapper");
     const card1 = document.querySelector(".card-1");
     const card2 = document.querySelector(".card-2");
     const card3 = document.querySelector(".card-3");
 
-    // Timeline to Open Envelope and Show Card 1
-    const openTl = gsap.timeline({ paused: true });
-    openTl.to(".envelope-flap", { rotateX: 180, duration: 1, ease: "power2.inOut" })
+    // Timeline to Open Envelope
+    const openTl = gsap.timeline({
+        paused: true
+    });
+    openTl.to(".envelope-flap", {
+        rotateX: 180,
+        duration: 1,
+        ease: "power2.inOut"
+    })
         .to(".card-1", {
             y: -200,
             scale: 1.1,
-            height: "auto", // Expand to full content height
-            maxHeight: "350px", // Allow growth
-            overflow: "auto", // Enable scroll
+            height: "auto",
+            maxHeight: "350px",
+            overflow: "auto",
             zIndex: 20,
             duration: 1,
             ease: "power3.out"
         }, "-=0.5");
 
-    let step = 0; // 0: Closed, 1: Open(Card1), 2: Card2, 3: Card3
+    let step = 0;
 
-    // Unified Click Interaction (Click anywhere on envelope/cards to progress)
     if (envelope) {
         envelope.addEventListener("click", () => {
-            // AUDIO PRIMING HACK: Unlock audio context for later videos
-            // Since user is interacting here, we try to play/pause all memory videos
+            // Prepare Audio/Video on interaction
             const allVideos = document.querySelectorAll("#memories-section video");
             allVideos.forEach(v => {
-                v.muted = false; // Prepare for sound
-                // Force load
+                v.muted = false;
                 v.load();
                 v.play().then(() => {
-                    v.pause(); // Immediately pause
+                    v.pause();
                     v.currentTime = 0;
                 }).catch(e => console.log("Audio prime failed", e));
             });
 
-            // Step 0: Open Envelope -> Show Card 1
             if (step === 0) {
                 openTl.play();
                 step = 1;
                 envelope.style.cursor = "pointer";
-            }
-            // Step 1: Card 1 -> Show Card 2
-            else if (step === 1) {
-                gsap.to(card1, { x: -300, rotation: -10, opacity: 0, duration: 0.8, ease: "power2.in" });
+            } else if (step === 1) {
+                gsap.to(card1, {
+                    x: -300,
+                    rotation: -10,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.in"
+                });
                 gsap.to(card2, {
                     y: -200,
                     scale: 1.1,
-                    height: "auto", /* Expand */
+                    height: "auto",
                     maxHeight: "350px",
                     overflow: "auto",
                     zIndex: 21,
@@ -302,14 +290,18 @@ function setupEnvelope() {
                     ease: "power3.out"
                 });
                 step = 2;
-            }
-            // Step 2: Card 2 -> Show Card 3
-            else if (step === 2) {
-                gsap.to(card2, { x: 300, rotation: 10, opacity: 0, duration: 0.8, ease: "power2.in" });
+            } else if (step === 2) {
+                gsap.to(card2, {
+                    x: 300,
+                    rotation: 10,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.in"
+                });
                 gsap.to(card3, {
                     y: -200,
                     scale: 1.1,
-                    height: "auto", /* Expand */
+                    height: "auto",
                     maxHeight: "350px",
                     overflow: "auto",
                     zIndex: 22,
@@ -318,20 +310,17 @@ function setupEnvelope() {
                     ease: "power3.out"
                 });
                 step = 3;
-            }
-            // Step 3: Card 3 -> Reset All
-            else if (step === 3) {
+            } else if (step === 3) {
                 const resetTl = gsap.timeline({
                     onComplete: () => {
-                        step = 0; // Reset state
+                        step = 0;
                     }
                 });
 
-                // 1. Drop active card (Card 3) back in (and shrink)
                 resetTl.to(card3, {
                     y: 0,
                     scale: 1,
-                    height: 150, /* Shrink back */
+                    height: 150,
                     maxHeight: 150,
                     overflow: "hidden",
                     opacity: 1,
@@ -339,30 +328,36 @@ function setupEnvelope() {
                     duration: 0.5,
                     ease: "power2.in"
                 })
-                    // 2. Put hidden cards (1 & 2) back in original places (instant/fast)
                     .set([card1, card2], {
-                        x: 0, y: 0,
+                        x: 0,
+                        y: 0,
                         rotation: 0,
                         scale: 1,
-                        height: 150, /* Reset height */
+                        height: 150,
                         maxHeight: 150,
                         overflow: "hidden",
                         opacity: 1,
                         clearProps: "zIndex"
                     })
-                    .set(".card-1", { zIndex: 5 })
-                    .set(".card-2", { zIndex: 4 })
-                    .set(".card-3", { zIndex: 3 })
-                    // Close flap
-                    .to(".envelope-flap", { rotateX: 0, duration: 0.8, ease: "power2.inOut" });
+                    .set(".card-1", {
+                        zIndex: 5
+                    })
+                    .set(".card-2", {
+                        zIndex: 4
+                    })
+                    .set(".card-3", {
+                        zIndex: 3
+                    })
+                    .to(".envelope-flap", {
+                        rotateX: 0,
+                        duration: 0.8,
+                        ease: "power2.inOut"
+                    });
             }
         });
-
-        // Ensure cursor remains pointer
         envelope.style.cursor = "pointer";
     }
 
-    // Pinning Logic
     ScrollTrigger.create({
         trigger: "#envelope-section",
         start: "top top",
@@ -371,8 +366,7 @@ function setupEnvelope() {
     });
 }
 
-// Scene 4: Cinematic Video Memories (Auto-Play Sequencer)
-// Scene 4: Cinematic Video Memories (Infinite Loop & Sound)
+// Scene 4: Cinematic Video Memories
 function setupMemories() {
     console.log("Setting up Memories...");
     const cards = gsap.utils.toArray("#memories-section .memory-card");
@@ -380,31 +374,31 @@ function setupMemories() {
 
     if (cards.length === 0) return;
 
-    // Initial State: Hide all cards
-    gsap.set(cards, { opacity: 0, visibility: "hidden", scale: 0.8, y: 100 });
+    gsap.set(cards, {
+        opacity: 0,
+        visibility: "hidden",
+        scale: 0.8,
+        y: 100
+    });
 
     let currentIndex = 0;
     let isAnimating = false;
 
-    // Transition Function: Cinematic & Smooth
     function showCard(index) {
-        // Loop safety (though logic handles it)
         if (index >= cards.length) index = 0;
-
         isAnimating = true;
         currentIndex = index;
 
         const card = cards[index];
         const video = videos[index];
 
-        // Animate In (Slower, Elegant Ease)
         gsap.to(card, {
             opacity: 1,
             visibility: "visible",
             scale: 1,
             y: 0,
-            duration: 1.5, // Slower
-            ease: "expo.out", // Smooth cinematic feel
+            duration: 1.5,
+            ease: "expo.out",
             onComplete: () => {
                 isAnimating = false;
                 playVideo(video, index);
@@ -414,7 +408,6 @@ function setupMemories() {
 
     function hideCard(index, nextIndex) {
         const card = cards[index];
-        // Animate Out
         gsap.to(card, {
             opacity: 0,
             scale: 0.9,
@@ -422,60 +415,50 @@ function setupMemories() {
             duration: 1,
             ease: "power2.inOut",
             onComplete: () => {
-                showCard(nextIndex); // Chain next card
+                showCard(nextIndex);
             }
         });
     }
 
-    // Video Playback Helper
     function playVideo(video, index) {
         if (!video) return;
-
         video.currentTime = 0;
-        video.volume = 1.0; // Ensure max volume
-        video.muted = false; // Try sound
+        video.volume = 1.0;
+        video.muted = false;
 
         const playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(err => {
-                console.warn("Autoplay blocked (Unmuted). Falling back to Muted:", err);
-                // CRITICAL FIX: If unmuted fails, we MUST fallback to muted, 
-                // otherwise video stops completely on mobile.
+                console.warn("Autoplay blocked. Falling back to Muted:", err);
                 video.muted = true;
-                video.play().catch(e => console.error("Even muted play failed", e));
+                video.play().catch(e => console.error("Play failed", e));
             });
         }
 
-        // INFINITE LOOP LOGIC: When video ends, go next (or back to start)
         video.onended = () => {
-            console.log(`Video ${index} ended. Next...`);
             if (index < cards.length - 1) {
                 hideCard(index, index + 1);
             } else {
-                // LAST VIDEO -> LOOP TO START (0)
-                console.log("Sequence complete. Looping back to start...");
                 hideCard(index, 0);
             }
         };
     }
 
-    // Click to Restart / Unmute Logic
     cards.forEach((card, index) => {
         card.style.cursor = "pointer";
         card.addEventListener("click", () => {
             const v = videos[index];
             if (v) {
-                v.muted = false; // Ensure click unmutes
+                v.muted = false;
                 v.volume = 1.0;
             }
         });
     });
 
-    // ScrollTrigger Just to PIN and START the sequence
     ScrollTrigger.create({
         trigger: "#memories-section",
         start: "top top",
-        end: "+=1500", // Reduced significantly so user can scroll away easily
+        end: "+=1500",
         pin: true,
         onEnter: () => {
             if (currentIndex === 0 && !isAnimating) {
@@ -486,7 +469,6 @@ function setupMemories() {
 }
 
 function setupFinale() {
-    // Basic Finale Animations
     gsap.from("#finale-section .finale-content", {
         scrollTrigger: {
             trigger: "#finale-section",
@@ -499,23 +481,24 @@ function setupFinale() {
     });
 }
 
-// Initialization - Ensures Fireworks Run on Load!
 document.addEventListener("DOMContentLoaded", () => {
-    // Trigger New Year Celebration (Fireworks)
     console.log("Triggering Fireworks...");
     triggerFireworks();
 });
 
 function triggerFireworks() {
-    // Check if confetti is loaded
     if (typeof confetti !== "function") {
         console.error("Canvas Confetti not loaded!");
         return;
     }
-
-    const duration = 2000; // Run for 2 Seconds
+    const duration = 2000;
     const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99999 };
+    const defaults = {
+        startVelocity: 30,
+        spread: 360,
+        ticks: 60,
+        zIndex: 99999
+    };
 
     function randomInRange(min, max) {
         return Math.random() * (max - min) + min;
@@ -523,15 +506,21 @@ function triggerFireworks() {
 
     const interval = setInterval(function () {
         const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-            return clearInterval(interval);
-        }
-
+        if (timeLeft <= 0) return clearInterval(interval);
         const particleCount = 50 * (timeLeft / duration);
-
-        // Spawn particles
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, {
+            particleCount,
+            origin: {
+                x: randomInRange(0.1, 0.3),
+                y: Math.random() - 0.2
+            }
+        }));
+        confetti(Object.assign({}, defaults, {
+            particleCount,
+            origin: {
+                x: randomInRange(0.7, 0.9),
+                y: Math.random() - 0.2
+            }
+        }));
     }, 250);
 }
