@@ -486,3 +486,11 @@ function setupFinale() {
         }
     }
 }
+
+// Initialization Code
+document.addEventListener("DOMContentLoaded", () => {
+    // Manually trigger setups
+    if (typeof setupEnvelope === "function") setupEnvelope();
+    if (typeof setupMemories === "function") setupMemories();
+    if (typeof setupFinale === "function") setupFinale();
+});
