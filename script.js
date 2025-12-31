@@ -479,9 +479,70 @@ function setupFinale() {
         duration: 1,
         ease: "power2.out"
     });
+
+    // Heart Particle Effect on Button Click
+    const btn = document.getElementById("send-love-btn");
+
+    if (btn) {
+        btn.addEventListener("click", (e) => {
+            // 1. Button Feedback
+            btn.innerHTML = `Love Sent! <i class="fa-solid fa-heart"></i>`;
+            btn.style.background = "#e91e63";
+            btn.style.color = "white";
+
+            gsap.to(btn, { scale: 0.95, yoyo: true, repeat: 1, duration: 0.1 });
+
+            // 2. Spawn Particles
+            createHeartExplosion(e.clientX, e.clientY);
+        });
+    }
+
+    function createHeartExplosion(x, y) {
+        for (let i = 0; i < 30; i++) {
+            const heart = document.createElement("div");
+            heart.classList.add("heart-particle");
+            heart.innerHTML = '<i class="fa-solid fa-heart"></i>';
+            document.body.appendChild(heart);
+
+            const size = Math.random() * 20 + 10;
+            const destinationX = (Math.random() - 0.5) * 300;
+            const destinationY = (Math.random() - 1) * 300 - 100; // Move Upwards
+            const rotation = Math.random() * 360;
+
+            gsap.set(heart, {
+                x: x,
+                y: y,
+                scale: 0,
+                opacity: 1,
+                position: "fixed",
+                zIndex: 9999,
+                color: Math.random() > 0.5 ? "#e91e63" : "#ff4081", // Variations of Pink
+                fontSize: size + "px",
+                pointerEvents: "none" // Pass through clicks
+            });
+
+            gsap.to(heart, {
+                x: `+=${destinationX}`,
+                y: `+=${destinationY}`,
+                rotation: rotation,
+                scale: 1,
+                opacity: 0,
+                duration: 1 + Math.random(),
+                ease: "power3.out",
+                onComplete: () => heart.remove()
+            });
+        }
+    }
 }
 
+// Final Initialization
 document.addEventListener("DOMContentLoaded", () => {
+    // 1. Trigger Setup Functions if they exist
+    if (typeof setupEnvelope === "function") setupEnvelope();
+    if (typeof setupMemories === "function") setupMemories();
+    if (typeof setupFinale === "function") setupFinale();
+
+    // 2. Trigger Fireworks
     console.log("Triggering Fireworks...");
     triggerFireworks();
 });

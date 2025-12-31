@@ -411,6 +411,13 @@ h3,
     opacity: 0.8;
 }
 
+.heart-particle {
+    position: fixed;
+    z-index: 99999 !important;
+    /* Ensure it's on top of everything */
+    pointer-events: none;
+}
+
 @keyframes heartbeat {
     0% {
         transform: scale(1);
