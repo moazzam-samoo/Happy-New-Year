@@ -221,6 +221,8 @@ function setupEnvelope() {
             const allVideos = document.querySelectorAll("#memories-section video");
             allVideos.forEach(v => {
                 v.muted = false; // Prepare for sound
+                // Force load
+                v.load();
                 v.play().then(() => {
                     v.pause(); // Immediately pause
                     v.currentTime = 0;
@@ -384,10 +386,11 @@ function setupMemories() {
         const playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(err => {
-                console.warn("Autoplay blocked, muting:", err);
-                // Fallback: Mute BUT keep trying to unmute if user interacts ?
+                console.warn("Autoplay blocked (Unmuted). Falling back to Muted:", err);
+                // CRITICAL FIX: If unmuted fails, we MUST fallback to muted, 
+                // otherwise video stops completely on mobile.
                 video.muted = true;
-                video.play();
+                video.play().catch(e => console.error("Even muted play failed", e));
             });
         }
 
