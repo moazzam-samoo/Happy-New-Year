@@ -113,6 +113,9 @@ if (btn) {
             createHeart(e.clientX, e.clientY);
         }
 
+        // Trigger Fireworks (Patakha)
+        triggerFireworks();
+
         // Button Feedback
         btn.textContent = "My heart is always yours";
         gsap.to(btn, { scale: 1.1, duration: 0.1, yoyo: true, repeat: 1 });
